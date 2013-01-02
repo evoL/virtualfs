@@ -1,5 +1,4 @@
 require 'virtualfs/backend'
-require 'virtualfs/runtime_cache'
 require 'virtualfs/dir'
 require 'virtualfs/file'
 require 'stringio'
@@ -10,7 +9,6 @@ module VirtualFS
       super opts
 
       @path = opts.fetch(:path)
-      @stream_cache = RuntimeCache.new
     end
 
     def entries(path=nil)
@@ -34,22 +32,18 @@ module VirtualFS
       p = path || @path
 
       cache do
-        results = ::Dir.glob(::File.join(p, pattern)).map do |entry|
+        ::Dir.glob(::File.join(p, pattern)).map do |entry|
           if ::File.directory?(entry)
             VirtualFS::Dir.new(entry, self)
           else
             VirtualFS::File.new(entry, self)
           end
         end
-
-        results.length == 1 ? results.first : results
       end
     end
 
     def stream_for(path)
-      @stream_cache.cache(path) do
-        StringIO.new( open(::File.join(@path, path), 'r') { |io| io.read } )
-      end
+      StringIO.new( open(::File.join(@path, path), 'r') { |io| io.read } )
     end
 
     alias_method :[], :glob
