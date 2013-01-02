@@ -21,7 +21,7 @@ module VirtualFS
     end
 
     def inspect
-      "<#{@backend.class.name}:#{@path}>"
+      "<#{@backend.class.name} '#{@path}' (dir)>"
     end
 
     alias_method :[], :glob

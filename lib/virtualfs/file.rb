@@ -12,7 +12,7 @@ module VirtualFS
     end
 
     def inspect
-      "<#{@backend.class.name}:#{@path}>"
+      "<#{@backend.class.name} '#{@path}'>"
     end
   end
 end
