@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
   gem.name          = "virtualfs"
   gem.require_paths = ["lib"]
   gem.version       = VirtualFS::VERSION
+
+  gem.add_dependency 'github_api'
 end
