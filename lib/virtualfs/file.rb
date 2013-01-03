@@ -8,7 +8,8 @@ module VirtualFS
     end
 
     def method_missing(method, *args)
-      @backend.stream_for(@path).send(method, *args)
+      @stream ||= @backend.stream_for(@path)
+      @stream.send(method, *args)
     end
 
     def inspect
