@@ -1,6 +1,4 @@
 require 'virtualfs/backend'
-require 'virtualfs/dir'
-require 'virtualfs/file'
 
 require 'base64'
 require 'stringio'
@@ -23,30 +21,13 @@ module VirtualFS
     def entries(path=nil)
       contents = path.nil? ? toplevel_contents : tree_contents(path)
 
-      contents.map do |p, data|
-        if data.type == 'tree'
-          VirtualFS::Dir.new p, self
-        else
-          VirtualFS::File.new p, self
-        end
-      end
+      map_entries(contents.values, :path) { |item| item.type == 'tree' }
     end
 
     def glob(pattern, path=nil)
-      # TODO: fix glob behavior
-      if pattern.include? '**'
-        contents = path.nil? ? internal_items : tree_contents(path, true)
-      else
-        contents = path.nil? ? toplevel_contents : tree_contents(path)
-      end
+      contents = path.nil? ? internal_items : tree_contents(path, true)
 
-      contents.select { |path, _| ::File.fnmatch(pattern, path) }.map do |p, data|
-        if data.type == 'tree'
-          VirtualFS::Dir.new p, self
-        else
-          VirtualFS::File.new p, self
-        end
-      end
+      map_entries(contents.select { |path, _| ::File.fnmatch(pattern, path, ::File::FNM_PATHNAME) }.values, :path) { |item| item.type == 'tree' }
     end
 
     def stream_for(path)

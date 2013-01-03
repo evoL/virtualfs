@@ -14,17 +14,10 @@ module VirtualFS
     def entries(path=nil)
       p = path || @path
 
-      cache do
-        list = ::Dir.entries(p)
-        list.slice(2, list.length).map do |entry|
-          file = ::File.join(p, entry)
+      contents = ::Dir.glob(::File.join(p, '*'), ::File::FNM_DOTMATCH)
 
-          if ::File.directory?(file)
-            VirtualFS::Dir.new(file, self)
-          else
-            VirtualFS::File.new(file, self)
-          end
-        end
+      cache do
+        map_entries(contents.slice(2, contents.length)) { |path| ::File.directory? path }
       end
     end
 
@@ -32,13 +25,7 @@ module VirtualFS
       p = path || @path
 
       cache do
-        ::Dir.glob(::File.join(p, pattern)).map do |entry|
-          if ::File.directory?(entry)
-            VirtualFS::Dir.new(entry, self)
-          else
-            VirtualFS::File.new(entry, self)
-          end
-        end
+        map_entries(::Dir.glob(::File.join(p, pattern))) { |path| ::File.directory? path }
       end
     end
 
