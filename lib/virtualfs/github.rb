@@ -37,6 +37,8 @@ module VirtualFS
       StringIO.new internal_blob(item.sha)
     end
 
+    alias_method :[], :glob
+
   private
 
     def internal_items
