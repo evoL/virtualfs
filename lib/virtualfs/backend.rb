@@ -28,5 +28,22 @@ module VirtualFS
         end
       end
     end
+
+    def entries(path=nil)
+      # override this
+      raise NotImplementedError
+    end
+
+    def glob(pattern, path=nil)
+      # override this
+      raise NotImplementedError
+    end
+
+    def stream_for(path)
+      # override this
+      raise NotImplementedError
+    end
+
+    alias_method :[], :glob
   end
 end

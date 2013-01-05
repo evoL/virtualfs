@@ -17,6 +17,7 @@ module VirtualFS
       contents = ::Dir.glob(::File.join(p, '*'), ::File::FNM_DOTMATCH)
 
       cache do
+        # The slice is for removing the '.' and '..' entries
         map_entries(contents.slice(2, contents.length)) { |path| ::File.directory? path }
       end
     end
