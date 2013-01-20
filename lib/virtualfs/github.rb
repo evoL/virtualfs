@@ -11,11 +11,11 @@ module VirtualFS
     def initialize(opts={})
       super opts
 
-      @gh = ::Github.new
-
       @user = opts.fetch(:user)
       @repo = opts.fetch(:repo)
       @branch = opts.fetch(:branch, 'master')
+
+      @gh = ::Github::GitData.new(opts)
     end
 
     def entries(path='/')
@@ -50,7 +50,7 @@ module VirtualFS
 
     def internal_items
       cache do
-        @gh.git_data.trees.get(@user, @repo, @branch, :recursive => true).tree.reduce({}) { |hash, item| hash[item.path] = item; hash }
+        @gh.trees.get(@user, @repo, @branch, :recursive => true).tree.reduce({}) { |hash, item| hash[item.path] = item; hash }
       end
     end
 
@@ -64,7 +64,7 @@ module VirtualFS
 
     def internal_blob(sha)
       cache do
-        Base64.decode64 @gh.git_data.blobs.get(@user, @repo, sha).content
+        Base64.decode64 @gh.blobs.get(@user, @repo, sha).content
       end
     end
   end
