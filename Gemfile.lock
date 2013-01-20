@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    virtualfs (0.0.1)
+    virtualfs (0.0.2)
       github_api (~> 0.8)
 
 GEM
@@ -11,7 +11,7 @@ GEM
     fakefs (0.4.2)
     faraday (0.8.4)
       multipart-post (~> 1.1)
-    github_api (0.8.6)
+    github_api (0.8.7)
       faraday (~> 0.8.1)
       hashie (~> 1.2.0)
       multi_json (~> 1.4)
@@ -30,7 +30,7 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
-    rack (1.4.1)
+    rack (1.4.4)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)

@@ -1,19 +1,28 @@
 module VirtualFS
   class Dir
     include Enumerable
-    attr_reader :path
 
     def initialize(path, backend)
       @path = path
+      @realpath = VirtualFS.realpath(path)
       @backend = backend
     end
 
+    def path
+      @realpath
+    end
+
+    def name
+      name = @path.rpartition('/').last
+      name.empty? ? '/' : name
+    end
+
     def entries
-      @backend.entries @path
+      @backend.entries @realpath
     end
 
     def glob(pattern)
-      @backend.glob pattern, @path
+      @backend.glob pattern, @realpath
     end
 
     def each(&block)
@@ -21,7 +30,13 @@ module VirtualFS
     end
 
     def inspect
-      "<#{@backend.class.name} '#{@path}' (dir)>"
+      if ['.','..'].include? name
+        p = @path
+      else
+        p = @realpath
+      end
+
+      "<#{@backend.class.name} '#{p}' (dir)>"
     end
 
     alias_method :[], :glob

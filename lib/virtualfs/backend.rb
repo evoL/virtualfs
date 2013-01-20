@@ -29,6 +29,10 @@ module VirtualFS
       end
     end
 
+    def dotfolders_for(path)
+      [VirtualFS::Dir.new(::File.join(path, '.'), self), VirtualFS::Dir.new(::File.join(path, '..'), self)]
+    end
+
     def entries(path=nil)
       # override this
       raise NotImplementedError

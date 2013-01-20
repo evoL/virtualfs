@@ -3,8 +3,12 @@ module VirtualFS
     attr_reader :path
 
     def initialize(path, backend)
-      @path = path
+      @path = VirtualFS.realpath(path)
       @backend = backend
+    end
+
+    def name
+      @path.rpartition('/').last
     end
 
     def method_missing(method, *args)

@@ -18,20 +18,27 @@ module VirtualFS
       @branch = opts.fetch(:branch, 'master')
     end
 
-    def entries(path=nil)
-      contents = path.nil? ? toplevel_contents : tree_contents(path)
+    def entries(path='/')
+      path = '/' << path unless path.start_with? '/'
+      p = path[1..-1]
 
-      map_entries(contents.values, :path) { |item| item.type == 'tree' }
+      contents = path == '/' ? toplevel_contents : tree_contents(p)
+      dotfolders_for(path) + map_entries(contents.values, :path) { |item| item.type == 'tree' }
     end
 
-    def glob(pattern, path=nil)
-      contents = path.nil? ? internal_items : tree_contents(path, true)
+    def glob(pattern, path='/')
+      path = '/' << path unless path.start_with? '/'
+      p = path[1..-1]
 
+      contents = path == '/' ? internal_items : tree_contents(p, true)
       map_entries(contents.select { |path, _| ::File.fnmatch(pattern, path, ::File::FNM_PATHNAME) }.values, :path) { |item| item.type == 'tree' }
     end
 
     def stream_for(path)
-      item = internal_items.fetch(path)
+      path = '/' << path unless path.start_with? '/'
+      p = path[1..-1]
+
+      item = internal_items.fetch(p)
       raise 'Not a file' unless item.type == 'blob'
 
       StringIO.new internal_blob(item.sha)

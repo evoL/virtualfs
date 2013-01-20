@@ -8,29 +8,32 @@ module VirtualFS
     def initialize(opts={})
       super opts
 
-      @path = opts.fetch(:path)
+      @path = ::File.realpath(opts.fetch(:path))
     end
 
-    def entries(path=nil)
-      p = path || @path
+    def entries(path='/')
+      p = VirtualFS.realpath(path)
 
-      contents = ::Dir.glob(::File.join(p, '*'), ::File::FNM_DOTMATCH)
+      contents = ::Dir.entries(::File.join(@path, p)).map { |entry| ::File.join(p, entry) }
 
       cache do
-        # The slice is for removing the '.' and '..' entries
-        map_entries(contents.slice(2, contents.length)) { |path| ::File.directory? path }
+        map_entries(contents) { |path| ::File.directory?(::File.join(@path, path)) }
       end
     end
 
-    def glob(pattern, path=nil)
-      p = path || @path
+    def glob(pattern, path='/')
+      p = VirtualFS.realpath(path)
+
+      contents = ::Dir.glob(::File.join(@path, p, pattern)).map { |entry| entry.sub(@path, '') }
 
       cache do
-        map_entries(::Dir.glob(::File.join(p, pattern))) { |path| ::File.directory? path }
+        map_entries(contents) { |path| ::File.directory?(::File.join(@path, path)) }
       end
     end
 
     def stream_for(path)
+      path = VirtualFS.realpath(path)
+
       StringIO.new( open(::File.join(@path, path), 'r') { |io| io.read } )
     end
 
