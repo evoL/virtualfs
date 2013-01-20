@@ -17,6 +17,10 @@ module VirtualFS
       name.empty? ? '/' : name
     end
 
+    def directory?
+      true
+    end
+
     def entries
       @backend.entries @realpath
     end
