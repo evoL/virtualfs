@@ -34,7 +34,7 @@ module VirtualFS
     def stream_for(path)
       path = VirtualFS.realpath(path)
 
-      StringIO.new( open(::File.join(@path, path), 'r') { |io| io.read } )
+      StringIO.new( ::File.open(::File.join(@path, path), 'r') { |io| io.read } )
     end
 
     alias_method :[], :glob
