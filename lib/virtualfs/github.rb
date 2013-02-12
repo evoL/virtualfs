@@ -2,6 +2,7 @@ require 'virtualfs/backend'
 
 require 'base64'
 require 'stringio'
+require 'unicode'
 require 'github_api'
 
 module VirtualFS
@@ -50,7 +51,14 @@ module VirtualFS
 
     def internal_items
       cache do
-        @gh.trees.get(@user, @repo, @branch, :recursive => true).tree.reduce({}) { |hash, item| hash[item.path] = item; hash }
+        @gh.trees.get(@user, @repo, @branch, :recursive => true).tree.reduce({}) do |hash, item|
+          # Handle decomposed UTF-8 in Github's response
+          item.path = fix_utf8(item.path)
+
+          # Make a hash
+          hash[item.path] = item
+          hash
+        end
       end
     end
 
@@ -66,6 +74,10 @@ module VirtualFS
       cache do
         Base64.decode64 @gh.blobs.get(@user, @repo, sha).content
       end
+    end
+
+    def fix_utf8(string)
+      Unicode::normalize_C(string.gsub(/^"|"$/, '').gsub(/\\(\d{3})/) { $1.to_i(8).chr }.force_encoding('utf-8'))
     end
   end
 end
