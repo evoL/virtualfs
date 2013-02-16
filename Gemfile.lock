@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    virtualfs (0.1.0)
+    virtualfs (0.1.2)
       github_api (~> 0.8)
       unicode (~> 0.4.4)
 

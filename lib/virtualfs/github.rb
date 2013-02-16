@@ -77,7 +77,7 @@ module VirtualFS
     end
 
     def fix_utf8(string)
-      Unicode::normalize_C(string.gsub(/^"|"$/, '').gsub(/\\(\d{3})/) { $1.to_i(8).chr }.force_encoding('utf-8'))
+      Unicode::normalize_C(string)
     end
   end
 end
