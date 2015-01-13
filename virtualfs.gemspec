@@ -13,9 +13,9 @@ Gem::Specification.new do |gem|
   gem.name          = "virtualfs"
   gem.require_paths = ["lib"]
   gem.version       = VirtualFS::VERSION
-  gem.licenses      = 'MIT'
+  gem.license       = 'MIT'
 
-  gem.add_dependency 'github_api', '~> 0.8'
+  gem.add_dependency 'github_api', '~> 0.8.0'
   gem.add_dependency 'unicode', '~> 0.4.4'
   gem.add_dependency 'dalli', '~> 2.7'
 
