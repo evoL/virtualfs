@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'github_api', '~> 0.8'
   gem.add_dependency 'unicode', '~> 0.4.4'
+  gem.add_dependency 'dalli', '~> 2.7'
 
   gem.add_development_dependency 'rspec', '~> 2.12'
   gem.add_development_dependency 'fakefs', '~> 0.4'

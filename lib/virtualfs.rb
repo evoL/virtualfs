@@ -27,3 +27,4 @@ require "virtualfs/github"
 # Caches
 require "virtualfs/runtime_cache"
 require "virtualfs/file_cache"
+require "virtualfs/dalli_cache"
