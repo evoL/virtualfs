@@ -14,7 +14,7 @@ module VirtualFS
       @user = opts.fetch(:user)
       @repo = opts.fetch(:repo)
       @branch = opts.fetch(:branch, 'master')
-      auth = opts[:authentication]
+      auth = opts.fetch(:authentication, {})
 
       # @gh = ::Github::GitData.new(opts)
       @gh = Octokit::Client.new(auth)
