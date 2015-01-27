@@ -55,9 +55,9 @@ module VirtualFS
       cache do
         @gh.tree("#{@user}/#{@repo}", @branch, :recursive => true).tree.reduce({}) do |hash, item|
           # Handle decomposed UTF-8 in Github's response
-          path = fix_utf8(item.path)
+          item.path = fix_utf8(item.path)
 
-          hash[path] = item
+          hash[item.path] = item
           hash
         end
       end
