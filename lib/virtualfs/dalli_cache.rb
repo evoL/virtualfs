@@ -14,8 +14,12 @@ module VirtualFS
     end
 
     def cache(key, &proc)
-      value = yield
-      return @client.get(key) unless @client.add(key, value)
+      value = @client.get(key)
+
+      unless value
+        value = yield
+        @client.set(key, value)
+      end
 
       value
     end
