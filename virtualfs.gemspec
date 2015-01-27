@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_dependency 'octokit', '~> 3.0'
+  gem.add_dependency 'unicode', '~> 0.4.4'
   gem.add_dependency 'dalli', '~> 2.7'
 
   gem.add_development_dependency 'rspec', '~> 2.12'

@@ -1,9 +1,10 @@
 PATH
   remote: .
   specs:
-    virtualfs (0.1.4)
+    virtualfs (0.1.6)
       dalli (~> 2.7)
       octokit (~> 3.0)
+      unicode (~> 0.4.4)
 
 GEM
   remote: https://rubygems.org/
@@ -28,6 +29,7 @@ GEM
     sawyer (0.6.0)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
+    unicode (0.4.4.2)
 
 PLATFORMS
   ruby
