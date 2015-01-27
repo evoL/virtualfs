@@ -2,8 +2,7 @@ require 'virtualfs/backend'
 
 require 'base64'
 require 'stringio'
-require 'unicode'
-require 'github_api'
+require 'octokit'
 
 module VirtualFS
   class Github < Backend
@@ -15,8 +14,10 @@ module VirtualFS
       @user = opts.fetch(:user)
       @repo = opts.fetch(:repo)
       @branch = opts.fetch(:branch, 'master')
+      auth = opts[:authentication]
 
-      @gh = ::Github::GitData.new(opts)
+      # @gh = ::Github::GitData.new(opts)
+      @gh = Octokit::Client.new(auth)
     end
 
     def entries(path='/')
@@ -47,15 +48,11 @@ module VirtualFS
 
     alias_method :[], :glob
 
-  private
+    private
 
     def internal_items
       cache do
-        @gh.trees.get(@user, @repo, @branch, :recursive => true).tree.reduce({}) do |hash, item|
-          # Handle decomposed UTF-8 in Github's response
-          item.path = fix_utf8(item.path)
-
-          # Make a hash
+        @gh.tree("#{@user}/#{@repo}", @branch, :recursive => true).tree.reduce({}) do |hash, item|
           hash[item.path] = item
           hash
         end
@@ -72,12 +69,8 @@ module VirtualFS
 
     def internal_blob(sha)
       cache do
-        Base64.decode64 @gh.blobs.get(@user, @repo, sha).content
+        Base64.decode64 @gh.blob("#{@user}/#{@repo}", sha).content
       end
-    end
-
-    def fix_utf8(string)
-      Unicode::normalize_C(string)
     end
   end
 end
